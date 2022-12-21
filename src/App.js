@@ -1,25 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
+import { Game } from './Components/Game';
+import NavBar from './Components/NavBar';
+
+// need to add a sign-up button
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{flexDirection: 'row', textAlign: 'center', alignItems: 'center'}}>
+      <NavBar />
+      <div style={{display: 'flex', justifyContent: 'center', textAlign: 'center', alignItems: 'center', paddingTop: 100}}>
+        <Game />
+      </div>  
     </div>
   );
 }
 
 export default App;
+
