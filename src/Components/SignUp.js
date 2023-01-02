@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
 
     async function login(username, password) {
         try {
-            const response = await fetch("http://localhost:3031/posts/login", {
+            const response = await fetch("https://connect-4-backend.onrender.com/posts/login", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -64,7 +64,7 @@ export const UserProvider = ({ children }) => {
 
     async function signUp2(username, password) {
         try {
-            const response = await fetch("http://localhost:3031/posts/signup", {
+            const response = await fetch("https://connect-4-backend.onrender.com/posts/signup", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -2,7 +2,7 @@
 // original score plus 1 for whoever won (user vs bot), since direct updates are not allowed
 export async function updateScore(score, botScore, token) {
     try {
-        const response = await fetch("http://localhost:3031/posts/score", {
+        const response = await fetch("https://connect-4-backend.onrender.com/posts/score", {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'token': token},
             body: JSON.stringify({
@@ -18,7 +18,7 @@ export async function updateScore(score, botScore, token) {
 // gets the score data for the given user
 export async function getScore(token) {
     try {
-      const response = await fetch("http://localhost:3031/posts/me", {
+      const response = await fetch("https://connect-4-backend.onrender.com/posts/me", {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'token': token},
     })
@@ -33,7 +33,7 @@ export async function getScore(token) {
 
 export async function getAll(token) {
     try {
-      const response = await fetch("http://localhost:3031/posts/all", {
+      const response = await fetch("https://connect-4-backend.onrender.com/posts/all", {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'token': token},
     })
@@ -49,7 +49,7 @@ export async function getAll(token) {
 
 export async function updatedLoggedIn(token) {
     try {
-        const response = await fetch("http://localhost:3031/logs/loggedIns", {
+        const response = await fetch("https://connect-4-backend.onrender.com/logs/loggedIns", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'token': token},
             body: JSON.stringify({'score': 'hihi'}),
@@ -61,7 +61,7 @@ export async function updatedLoggedIn(token) {
 
   export async function getLoggedIn(token) {
     try {
-        const response = await fetch("http://localhost:3031/logs/loggedIns", {
+        const response = await fetch("https://connect-4-backend.onrender.com/logs/loggedIns", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', 'token': token},
         })        
@@ -77,7 +77,7 @@ export async function updatedLoggedIn(token) {
   export async function notifyUser(token, user, toNotify) {
     console.log(user+":"+toNotify)
     try {
-        const response = await fetch("http://localhost:3031/posts/notify", {
+        const response = await fetch("https://connect-4-backend.onrender.com/posts/notify", {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'token': token},
             body: JSON.stringify({
@@ -94,7 +94,7 @@ export async function updatedLoggedIn(token) {
     console.log('hee')
     console.log(user)
     try {
-        const response = await fetch("http://localhost:3031/posts/updateGrid", {
+        const response = await fetch("https://connect-4-backend.onrender.com/posts/updateGrid", {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'token': token},
             body: JSON.stringify({
@@ -109,7 +109,7 @@ export async function updatedLoggedIn(token) {
 
   export async function getGrid(token) {
     try {
-        const response = await fetch("http://localhost:3031/posts/getGrid", {
+        const response = await fetch("https://connect-4-backend.onrender.com/posts/getGrid", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', 'token': token},
         })        
