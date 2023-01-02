@@ -1,45 +1,123 @@
-const DataStore = ''
-const ScoreTracker = ''
-
-// writes the user score, bot score, and username to the databaset
-export default async function writeScore(username, score, botScore) {
-    try {
-        await DataStore.save(
-            new ScoreTracker({
-                "score": score,
-                "botScore": botScore,
-                "user": username
-            })
-        )    
-        console.log("Post saved successfully!");
-    } catch (error) {
-      console.log("Error saving post", error);
-    }
-}
-
 // updates the score and botscore for hte given user by deleting the score and re-writing with the
 // original score plus 1 for whoever won (user vs bot), since direct updates are not allowed
-export async function updateScore(username, score, botScore) {
+export async function updateScore(score, botScore, token) {
     try {
-        const curData = await DataStore.query(ScoreTracker)
-        const curScore = curData.filter(i => i.user === username)
-        await DataStore.delete(ScoreTracker, (score) => score.user.eq(username));
-        writeScore(username, curScore[0].score+score, curScore[0].botScore+botScore)   
+        const response = await fetch("http://localhost:3031/posts/score", {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+            body: JSON.stringify({
+              'userScore': score,
+              'botScore': botScore
+          }),
+        })        
+    } catch (error) {
+        console.log('error signing in:', error);
     }
-    catch (error) {
-        console.log("Error saving post", error);
-      }
-}
+  }
 
 // gets the score data for the given user
-export async function getScore(username) {
+export async function getScore(token) {
     try {
-        const curData = await DataStore.query(ScoreTracker)
-        const curScore = curData.filter(i => i.user === username)
-        return curScore[0]   
-    }
-    catch (error) {
-        console.log("Error getting data", error);
-      }
+      const response = await fetch("http://localhost:3031/posts/me", {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'token': token},
+    })
+    const data = await response.json()
+    //console.log(data)
+    return data
+    
+  } catch (error) {
+      console.log('error signing in:', error);
+  }
 }
 
+export async function getAll(token) {
+    try {
+      const response = await fetch("http://localhost:3031/posts/all", {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'token': token},
+    })
+    const data = await response.json()
+    //console.log(data)
+    return data
+    
+  } catch (error) {
+      console.log('error signing in:', error);
+  }
+}
+
+
+export async function updatedLoggedIn(token) {
+    try {
+        const response = await fetch("http://localhost:3031/logs/loggedIns", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+            body: JSON.stringify({'score': 'hihi'}),
+          })        
+    } catch (error) {
+        console.log('error signing in:', error);
+    }
+  }
+
+  export async function getLoggedIn(token) {
+    try {
+        const response = await fetch("http://localhost:3031/logs/loggedIns", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+        })        
+        const data = await response.json()
+        //console.log(data)
+        return data
+
+    } catch (error) {
+        console.log('error signing in:', error);
+    }
+  }
+
+  export async function notifyUser(token, user, toNotify) {
+    console.log(user+":"+toNotify)
+    try {
+        const response = await fetch("http://localhost:3031/posts/notify", {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+            body: JSON.stringify({
+                'user': user,
+                'email': toNotify
+            }),
+          })        
+    } catch (error) {
+        console.log('error signing in:', error);
+    }
+  }
+
+  export async function updateGrid(token, user, grid) {
+    console.log('hee')
+    console.log(user)
+    try {
+        const response = await fetch("http://localhost:3031/posts/updateGrid", {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+            body: JSON.stringify({
+                'user': user,
+                'grid': grid
+            }),
+          })        
+    } catch (error) {
+        console.log('error signing in:', error);
+    }
+  }
+
+  export async function getGrid(token) {
+    try {
+        const response = await fetch("http://localhost:3031/posts/getGrid", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'token': token},
+        })        
+        const data = await response.json()
+        //console.log(data)
+        return data
+
+    } catch (error) {
+        console.log('error signing in:', error);
+    }
+  }

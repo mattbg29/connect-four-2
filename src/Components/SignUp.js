@@ -1,7 +1,5 @@
-import writeScore from './WriteScore';
 import { createContext, useState } from 'react';
-
-const Auth = ''
+import { updatedLoggedIn, getLoggedIn, getAll } from './WriteScore';
 
 // I use UserContext for keeping track of whether the user is logged in
 export const UserContext = createContext({ name: '', auth: false, setName: () => {}})
@@ -13,30 +11,51 @@ export const UserContext = createContext({ name: '', auth: false, setName: () =>
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState({ name: '', auth: true})
+    const [token, setToken] = useState('')
+    const [loggedIn, setLoggedIn] = useState('')
 
     async function login(username, password) {
         try {
-            await Auth.signIn(username, password);
-            console.log('login success')
-            setUser(({
-                ...user,
-                name: username,
-                auth: true,    
-            }))
-            //localStorage.setItem('curUser', user.attributes.email)
+            const response = await fetch("http://localhost:3031/posts/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    'email': username,
+                    'password': password
+                }),
+            })
+    
+            const data = await response.json()
+            //console.log(data)
+            if (response.ok) {
+                setUser(() => ({
+                    name: username,
+                    auth: false,
+                }))
+                setToken(data.token)    
+                //const resp = await updatedLoggedIn(data.token)
+                //console.log('hooo')
+                //console.log(resp)
+                let loggedIn = await getAll(data.token)
+                loggedIn = loggedIn.map((log) => log["email"])
+                setLoggedIn(loggedIn)
+
+            } else {
+                return data
+            }
+          
         } catch (error) {
-            console.log('error signing in', error);
+            console.log('error signing in:', error);
         }
     }
 
     async function logout() {
         try {
-            await Auth.signOut( {global: true });
-            console.log("success")
             setUser(() => ({
                 name: '',
                 auth: false,
             }))
+            setToken(() => (''))
         } catch (error) {
             console.log('error signing out', error);
         }
@@ -45,22 +64,27 @@ export const UserProvider = ({ children }) => {
 
     async function signUp2(username, password) {
         try {
-            await Auth.signUp({
-                username,
-                password,
-                //    email,          // optional
-                //    phone_number,   // optional - E.164 number convention
-                    // other custom attributes 
-                //},
-                autoSignIn: { // optional - enables auto sign in after user is confirmed
-                    enabled: true,
-                }
-            });
-            writeScore(username, 0, 0)
-            setUser(() => ({
-                name: username,
-                auth: false,
-            }))
+            const response = await fetch("http://localhost:3031/posts/signup", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    'username': 'test a',
+                    'email': username,
+                    'password': password
+                }),
+            })
+    
+            const data = await response.json()
+            if (response.ok) {
+                setUser(() => ({
+                    name: username,
+                    auth: false,
+                }))
+                setToken(data.token)    
+                updatedLoggedIn(data.token)
+            } else {
+                return data
+            }          
         } catch (error) {
             console.log('error signing up:', error);
         }
@@ -68,7 +92,7 @@ export const UserProvider = ({ children }) => {
     
 
     return (
-        <UserContext.Provider value = {{ user, setUser, login, logout, signUp2 }}>
+        <UserContext.Provider value = {{ user, token, loggedIn, setUser, login, logout, signUp2 }}>
             {children}
         </UserContext.Provider>
     )
@@ -76,24 +100,5 @@ export const UserProvider = ({ children }) => {
 
 
 
-export async function signUp(username, password) {
-    try {
-        const { user } = await Auth.signUp({
-            username,
-            password,
-            //    email,          // optional
-            //    phone_number,   // optional - E.164 number convention
-                // other custom attributes 
-            //},
-            autoSignIn: { // optional - enables auto sign in after user is confirmed
-                enabled: true,
-            }
-        });
-        console.log(user);
-        writeScore(username, 0, 0)
-    } catch (error) {
-        console.log('error signing up:', error);
-    }
-}
 
 //https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/#sign-out

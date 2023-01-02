@@ -5,12 +5,16 @@ import { useState, useContext } from "react";
 
 const LoginForm = ({ task }) => {
     const [userName, setUserName] = useState("")    
-    const [password, setPassword] = useState("")    
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState("")    
     const { login, signUp2 } = useContext(UserContext)
 
     async function signInNow() {
-        task === 'Sign In' ? login(userName, password) : signUp2(userName, password)
+      const response = (task === 'Sign In' ? await login(userName, password) : await signUp2(userName, password) )
+      if (response) {
+          setError(response['message'])
       }
+    }
 
 
     return (
@@ -37,6 +41,7 @@ const LoginForm = ({ task }) => {
                   value = {password} 
                   onChange={(e) => setPassword(e.target.value)} />
               <br></br>
+              <div>{error}</div>
             </form>
             <button className="login-btn"onClick={() => signInNow()}>click</button>
           </div>

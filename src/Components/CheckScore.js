@@ -74,6 +74,7 @@ export function checkScore(row, col, grid, target) {
         return 1        
     } 
 
+    // check left diag for win
     score = 1
     rowNow = row + 1
     if (rowNow <= 5) {
