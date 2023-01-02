@@ -23,6 +23,7 @@ export async function getScore(token) {
           headers: { 'Content-Type': 'application/json', 'token': token},
     })
     const data = await response.json()
+    console.log(data)
     //console.log(data)
     return data
     
